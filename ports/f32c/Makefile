@@ -13,7 +13,13 @@ include $(TOP)/py/py.mk
 include $(TOP)/extmod/extmod.mk
 
 ifeq ($(CROSS), 1)
+ifeq ($(ARCH), riscv)
+CROSS_COMPILE ?= riscv32-elf-
+LDFLAGS += --library-path=${F32C_BASE_DIR}/src/lib/riscv
+else
 CROSS_COMPILE ?= mips-elf-
+LDFLAGS += --library-path=${F32C_BASE_DIR}/src/lib/mipsel
+endif
 endif
 
 INC += -I.
@@ -21,14 +27,19 @@ INC += -I$(TOP)
 INC += -I$(BUILD)
 
 ifeq ($(CROSS), 1)
-F32C_BASE_DIR=/u/m/github/f32c
+F32C_BASE_DIR=/home/m/github/f32c
 INC += -I${F32C_BASE_DIR}/src/include
-CFLAGS_F32C = -march=f32c -EL -nostdinc -include sys/param.h -DF32C
+ifeq ($(ARCH), mips)
+CFLAGS_F32C = -march=f32c -EL
+endif
+ifeq ($(ARCH), riscv)
+CFLAGS_F32C = -mabi=ilp32 -march=rv32im
+endif
+CFLAGS_F32C += -nostdinc -include sys/param.h -DF32C
 CFLAGS += $(INC) -Wall -Werror -std=c99 -nostdlib $(CFLAGS_F32C) $(COPT)
 LIBS += -lm -lc
 LDFLAGS += -N -EL
 LDFLAGS += --section-start=.init=0x80000000
-LDFLAGS += --library-path=${F32C_BASE_DIR}/src/lib/mipsel
 LDFLAGS += --gc-sections -lcrt0
 OBJFLAGS = -R .rel.dyn -R .MIPS.abiflags
 DFU = $(TOP)/tools/dfu.py
@@ -100,7 +111,7 @@ $(BUILD)/py.elf: $(OBJ)
 	$(Q)$(SIZE) $@
 
 $(BUILD)/py.bin: $(BUILD)/py.elf
-	${ISA_CHECK} mips $(BUILD)/py.elf
+	${ISA_CHECK} $(ARCH) $(BUILD)/py.elf
 	$(Q)$(OBJCOPY) -O srec $(OBJFLAGS) $^ $(BUILD)/py.srec
 	$(Q)$(OBJCOPY) -O binary $(OBJFLAGS) $^ $(BUILD)/py.bin
 
