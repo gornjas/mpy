@@ -66,3 +66,23 @@ void mp_hal_delay_ms(mp_uint_t ms) {
     // XXX fixme
 }
 #endif
+
+
+/*
+ * XXX FIX THOSE, THEN MOVE TO LIBS:
+ */
+int32_t
+__clzdi2(int64_t a) {
+	return 1;
+}
+
+/* XXX only riscv needs those: */
+int32_t
+__extendhfdf2(int16_t a) {
+	return 1;
+}
+
+int32_t
+__truncsfhf2(int32_t a) {
+	return 1;
+}
