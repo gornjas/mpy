@@ -27,7 +27,7 @@ INC += -I$(TOP)
 INC += -I$(BUILD)
 
 ifeq ($(CROSS), 1)
-F32C_BASE_DIR=/home/m/github/f32c
+F32C_BASE_DIR=/u/m/github/f32c
 INC += -I${F32C_BASE_DIR}/src/include
 ifeq ($(ARCH), mips)
 CFLAGS_F32C = -march=f32c -EL
@@ -74,7 +74,8 @@ CXXFLAGS += $(filter-out -std=c99,$(CFLAGS))
 SRC_C += \
 	main.c \
 	uart_core.c \
-	f32c_mphal.c
+	f32c_mphal.c \
+	f32c_vfs_posix.c
 
 SHARED_SRC_C += $(addprefix shared/,\
 	libc/printf.c \
@@ -85,7 +86,13 @@ SHARED_SRC_C += $(addprefix shared/,\
 	)
 
 EXTMOD_SRC_C += $(addprefix extmod/,\
+	modos.c \
 	modtime.c \
+	modvfs.c \
+	vfs.c \
+	vfs_posix.c \
+	vfs_posix_file.c \
+	vfs_reader.c \
 	)
 
 ifeq ($(CROSS), 1)

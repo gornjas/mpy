@@ -26,6 +26,16 @@
 #define MICROPY_ENABLE_COMPILER		(1)
 
 #define MICROPY_ENABLE_GC		(1)
+
+// Enable the VFS, and enable the posix "filesystem".
+#define MICROPY_ENABLE_FINALISER    (1)
+#define MICROPY_VFS                 (1)
+#define MICROPY_READER_VFS          (1)
+#define MICROPY_HELPER_LEXER_UNIX   (1)
+#define MICROPY_VFS_POSIX           (1)
+#define MICROPY_READER_POSIX        (1)
+#define MICROPY_PY_OS               (1)
+
 #define MICROPY_HELPER_REPL		(1)
 #define MICROPY_ENABLE_EXTERNAL_IMPORT	(1)
 
