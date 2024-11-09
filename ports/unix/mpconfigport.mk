@@ -9,7 +9,7 @@ MICROPY_FORCE_32BIT = 0
 MICROPY_USE_READLINE = 1
 
 # btree module using Berkeley DB 1.xx
-MICROPY_PY_BTREE = 1
+MICROPY_PY_BTREE = 0
 
 # _thread module using pthreads
 MICROPY_PY_THREAD = 1
@@ -21,10 +21,10 @@ MICROPY_PY_TERMIOS = 1
 MICROPY_PY_SOCKET = 1
 
 # ffi module requires libffi (libffi-dev Debian package)
-MICROPY_PY_FFI = 1
+MICROPY_PY_FFI = 0
 
 # ssl module requires one of the TLS libraries below
-MICROPY_PY_SSL = 1
+MICROPY_PY_SSL = 0
 # axTLS has minimal size but implements only a subset of modern TLS
 # functionality, so may have problems with some servers.
 MICROPY_SSL_AXTLS = 0
