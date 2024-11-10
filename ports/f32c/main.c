@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <fatfs/ff.h>
+
 #include "py/builtin.h"
 #include "py/compile.h"
 #include "py/runtime.h"
@@ -9,6 +11,9 @@
 #include "py/gc.h"
 #include "py/mperrno.h"
 #include "shared/runtime/pyexec.h"
+
+#include "extmod/vfs.h"
+#include "extmod/vfs_posix.h"
 
 #if MICROPY_ENABLE_COMPILER
 void do_str(const char *src, mp_parse_input_kind_t input_kind) {
@@ -46,6 +51,24 @@ int main(int argc, char **argv) {
     #endif
 
     mp_init();
+
+    #if MICROPY_VFS_POSIX
+    {
+	char buf[FF_MAX_SS];
+	// Format the RAM disk
+	int res = f_mkfs("r:", 0, buf, FF_MAX_SS);
+	if (res != FR_OK)
+		printf("f_mkfs() returned %d\n", res);
+
+	// Mount the host FS at the root of our internal VFS
+	mp_obj_t args[2] = {
+	    MP_OBJ_TYPE_GET_SLOT(&mp_type_vfs_posix, make_new)(&mp_type_vfs_posix, 0, 0, NULL),
+	    MP_OBJ_NEW_QSTR(MP_QSTR__slash_),
+	};
+	mp_vfs_mount(2, args, (mp_map_t *)&mp_const_empty_map);
+	MP_STATE_VM(vfs_cur) = MP_STATE_VM(vfs_mount_table);
+    }
+    #endif
 
     #if MICROPY_ENABLE_COMPILER
     #if MICROPY_REPL_EVENT_DRIVEN
