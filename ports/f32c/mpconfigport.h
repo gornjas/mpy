@@ -39,6 +39,8 @@
 #define MICROPY_HELPER_REPL		(1)
 #define MICROPY_ENABLE_EXTERNAL_IMPORT	(1)
 
+#define	MICROPY_READLINE_HISTORY_SIZE	(32)
+
 #define MICROPY_ALLOC_PATH_MAX		(256)
 
 // Use the minimum headroom in the chunk allocator for parse nodes.
@@ -53,7 +55,7 @@ typedef long mp_off_t;
 // We need to provide a declaration/definition of alloca()
 #include <stdlib.h>
 
-#define MICROPY_HEAP_SIZE		(25600) // heap size 25 kilobytes
+#define MICROPY_HEAP_SIZE		(256 * 1024) // heap size 256 Kbytes
 
 #ifdef F32C
 #define MICROPY_HW_BOARD_NAME "ulx3s"
