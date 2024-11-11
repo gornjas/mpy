@@ -13,6 +13,7 @@ include $(TOP)/py/py.mk
 include $(TOP)/extmod/extmod.mk
 
 ifeq ($(CROSS), 1)
+F32C_BASE_DIR=$(dir ${MAKEFILES})../..
 ifeq ($(ARCH), riscv)
 CROSS_COMPILE ?= riscv32-elf-
 LDFLAGS += --library-path=${F32C_BASE_DIR}/src/lib/riscv
@@ -27,7 +28,6 @@ INC += -I$(TOP)
 INC += -I$(BUILD)
 
 ifeq ($(CROSS), 1)
-F32C_BASE_DIR=/u/m/github/f32c
 INC += -I${F32C_BASE_DIR}/src/include
 ifeq ($(ARCH), mips)
 CFLAGS_F32C = -march=f32c -EL
