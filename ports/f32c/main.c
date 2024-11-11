@@ -35,7 +35,7 @@ void do_str(const char *src, mp_parse_input_kind_t input_kind) {
 static char *stack_top;
 
 #if MICROPY_ENABLE_GC
-static char heap[MICROPY_HEAP_SIZE];
+static char *heap;
 #endif
 
 int main(int argc, char **argv) {
@@ -47,7 +47,8 @@ int main(int argc, char **argv) {
     #endif
 
     #if MICROPY_ENABLE_GC
-    gc_init(heap, heap + sizeof(heap));
+    heap = malloc(MICROPY_HEAP_SIZE);
+    gc_init(&heap[0], &heap[MICROPY_HEAP_SIZE]);
     #endif
 
     mp_init();
@@ -59,6 +60,7 @@ int main(int argc, char **argv) {
 	int res = f_mkfs("r:", 0, buf, FF_MAX_SS);
 	if (res != FR_OK)
 		printf("f_mkfs() returned %d\n", res);
+	f_chdrive("r:");
 
 	// Mount the host FS at the root of our internal VFS
 	mp_obj_t args[2] = {
