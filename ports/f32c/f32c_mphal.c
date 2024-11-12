@@ -56,7 +56,7 @@ mp_uint_t mp_hal_ticks_us(void) {
 #ifndef mp_hal_time_ns
 uint64_t mp_hal_time_ns(void) {
     struct timespec tv;
-    clock_gettime(CLOCK_REALTIME, &tv);
+    clock_gettime(CLOCK_MONOTONIC, &tv);
     return (uint64_t)tv.tv_sec * 1000000000ULL + (uint64_t)tv.tv_nsec;
 }
 #endif
