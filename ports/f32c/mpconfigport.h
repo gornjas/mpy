@@ -40,12 +40,10 @@
 #define MICROPY_HELPER_LEXER_UNIX   (1)
 #define MICROPY_VFS_POSIX           (1)
 #define MICROPY_READER_POSIX        (1)
-#define MICROPY_PY_OS               (1)
 
 // VFS stat functions should return time values relative to 1970/1/1
 #define MICROPY_EPOCH_IS_1970       (1)
 
-#define MICROPY_HELPER_REPL		(1)
 #define MICROPY_ENABLE_EXTERNAL_IMPORT	(1)
 
 #define	MICROPY_READLINE_HISTORY_SIZE	(32)
