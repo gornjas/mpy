@@ -1,9 +1,7 @@
 /*
- * This file is part of the MicroPython project, http://micropython.org/
- *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Damien P. George
+ * Copyright 2024 Marko Zec
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +22,9 @@
  * THE SOFTWARE.
  */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
 #include <time.h>
-#include <sys/time.h>
-#include <fcntl.h>
 
 #include "py/mphal.h"
-#include "py/mpthread.h"
-#include "py/runtime.h"
-#include "extmod/misc.h"
 
 
 #ifndef mp_hal_ticks_ms
