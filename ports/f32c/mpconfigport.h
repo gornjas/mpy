@@ -7,11 +7,11 @@
 // Enable floating point by default.
 #define MICROPY_FLOAT_IMPL		(MICROPY_FLOAT_IMPL_DOUBLE)
 
-// Enable long-ints by default.
+// Enable long-ints by default (LONGLONG or MPZ).
 #define MICROPY_LONGINT_IMPL		(MICROPY_LONGINT_IMPL_LONGLONG)
 
 // options to control how MicroPython is built
-#define MICROPY_CONFIG_ROM_LEVEL (MICROPY_CONFIG_ROM_LEVEL_FULL_FEATURES)
+#define MICROPY_CONFIG_ROM_LEVEL (MICROPY_CONFIG_ROM_LEVEL_EVERYTHING)
 
 // XXX EXTRA_FEATURES level enables this, leading to SBSS overflow?!?
 #define MICROPY_PY_MATH_SPECIAL_FUNCTIONS (0)
@@ -20,7 +20,6 @@
 #define MICROPY_STACK_CHECK		(0)
 
 // Enable the unix-specific "time" module.
-#define MICROPY_PY_TIME                (1)
 #define MICROPY_PY_TIME_TIME_TIME_NS   (1)
 //#define MICROPY_PY_TIME_CUSTOM_SLEEP   (1)
 //#define MICROPY_PY_TIME_GMTIME_LOCALTIME_MKTIME (0)
@@ -71,5 +70,19 @@ typedef long mp_off_t;
 #define MICROPY_HW_BOARD_NAME "unknown"
 #define MICROPY_HW_MCU_NAME "unknown"
 #endif
+
+// MACHINE stuff, not enabled by MICROPY_CONFIG_ROM_LEVEL_EVERYTHING
+#define MICROPY_PY_MACHINE (1)
+#define MICROPY_PY_MACHINE_INCLUDEFILE "ports/f32c/modmachine.c"
+
+//#define MICROPY_PY_MACHINE_ADC (1)
+#define MICROPY_PY_MACHINE_PIN_BASE (1)
+#define MICROPY_PY_MACHINE_PULSE (1)
+//#define MICROPY_PY_MACHINE_PWM (1)
+//#define MICROPY_PY_MACHINE_SPI (1)
+//#define MICROPY_PY_MACHINE_SOFTI2C (1)
+//#define MICROPY_PY_MACHINE_SOFTSPI (1)
+#define MICROPY_PY_MACHINE_TIMER (1)
+//#define MICROPY_PY_MACHINE_UART (1)
 
 #define MP_STATE_PORT MP_STATE_VM
