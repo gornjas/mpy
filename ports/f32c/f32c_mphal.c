@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 
+#include <stdio.h>
 #include <time.h>
 
 #include "py/mphal.h"
@@ -63,16 +64,40 @@ void mp_hal_delay_ms(mp_uint_t ms) {
  */
 int32_t
 __clzdi2(int64_t a) {
-	return 1;
+	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
+	exit(1);
 }
 
 /* XXX only riscv needs those: */
 int32_t
+poll(int a) {
+	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
+	exit(1);
+}
+
+int32_t
 __extendhfdf2(int16_t a) {
-	return 1;
+	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
+	exit(1);
 }
 
 int32_t
 __truncsfhf2(int32_t a) {
-	return 1;
+	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
+	exit(1);
+}
+
+double tgamma(double x) {
+	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
+	exit(1);
+}
+
+int lgamma_r(int x) {
+	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
+	exit(1);
+}
+
+int signgam(int x) {
+	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
+	exit(1);
 }

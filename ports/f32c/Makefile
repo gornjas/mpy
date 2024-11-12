@@ -86,7 +86,20 @@ SHARED_SRC_C += $(addprefix shared/,\
 	)
 
 EXTMOD_SRC_C += $(addprefix extmod/,\
+	modasyncio.c \
+	modbinascii.c \
+	moddeflate.c \
+	modframebuf.c \
+	modhashlib.c \
+	modheapq.c \
+	modjson.c \
+	modmachine.c \
 	modos.c \
+	modplatform.c \
+	modrandom.c \
+	modre.c \
+	modselect.c \
+	moductypes.c \
 	modtime.c \
 	modvfs.c \
 	vfs.c \

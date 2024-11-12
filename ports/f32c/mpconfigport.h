@@ -11,7 +11,13 @@
 #define MICROPY_LONGINT_IMPL		(MICROPY_LONGINT_IMPL_LONGLONG)
 
 // options to control how MicroPython is built
-#define MICROPY_CONFIG_ROM_LEVEL (MICROPY_CONFIG_ROM_LEVEL_BASIC_FEATURES)
+#define MICROPY_CONFIG_ROM_LEVEL (MICROPY_CONFIG_ROM_LEVEL_EXTRA_FEATURES)
+
+// XXX EXTRA_FEATURES level enables this, leading to SBSS overflow?!?
+#define MICROPY_PY_MATH_SPECIAL_FUNCTIONS (0)
+
+// XXX EXTRA_FEATURES level enables this, leading to nlr_jump_fail()?!?
+#define MICROPY_STACK_CHECK		(0)
 
 // Enable the unix-specific "time" module.
 #define MICROPY_PY_TIME                (1)
@@ -35,6 +41,9 @@
 #define MICROPY_VFS_POSIX           (1)
 #define MICROPY_READER_POSIX        (1)
 #define MICROPY_PY_OS               (1)
+
+// VFS stat functions should return time values relative to 1970/1/1
+#define MICROPY_EPOCH_IS_1970       (1)
 
 #define MICROPY_HELPER_REPL		(1)
 #define MICROPY_ENABLE_EXTERNAL_IMPORT	(1)
