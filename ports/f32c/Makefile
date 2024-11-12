@@ -85,40 +85,16 @@ SHARED_SRC_C += $(addprefix shared/,\
 	$(SHARED_SRC_C_EXTRA) \
 	)
 
-EXTMOD_SRC_C += $(addprefix extmod/,\
-	modasyncio.c \
-	modbinascii.c \
-	moddeflate.c \
-	modframebuf.c \
-	modhashlib.c \
-	modheapq.c \
-	modjson.c \
-	modmachine.c \
-	modos.c \
-	modplatform.c \
-	modrandom.c \
-	modre.c \
-	modselect.c \
-	moductypes.c \
-	modtime.c \
-	modvfs.c \
-	vfs.c \
-	vfs_posix.c \
-	vfs_posix_file.c \
-	vfs_reader.c \
-	)
-
 ifeq ($(CROSS), 1)
 SRC_C += shared/libc/string0.c
 endif
 
-OBJ += $(PY_CORE_O)
+OBJ += $(PY_O)
 OBJ += $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_CXX:.cpp=.o))
 OBJ += $(addprefix $(BUILD)/, $(SHARED_SRC_C:.c=.o))
-OBJ += $(addprefix $(BUILD)/, $(EXTMOD_SRC_C:.c=.o))
 
-SRC_QSTR += $(SRC_C) $(SRC_CXX) $(SHARED_SRC_C) $(EXTMOD_SRC_C)
+SRC_QSTR += $(SRC_C) $(SRC_CXX) $(SHARED_SRC_C)
 
 include $(TOP)/py/mkrules.mk
 
