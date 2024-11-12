@@ -76,6 +76,7 @@ typedef long mp_off_t;
 #define MICROPY_PY_MACHINE_INCLUDEFILE "ports/f32c/modmachine.c"
 
 //#define MICROPY_PY_MACHINE_ADC (1)
+//#define MICROPY_PY_MACHINE_DAC (1)
 #define MICROPY_PY_MACHINE_PIN_BASE (1)
 #define MICROPY_PY_MACHINE_PULSE (1)
 //#define MICROPY_PY_MACHINE_PWM (1)
