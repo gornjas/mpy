@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <unistd.h>
+
 #include "py/mpconfig.h"
 
 // Receive single character
