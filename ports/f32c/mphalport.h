@@ -11,9 +11,7 @@ static inline void mp_hal_set_interrupt_char(char c) {
     { if (err_flag == -1) \
       { mp_raise_OSError(error_val); } }
 
-static inline void mp_hal_delay_us(mp_uint_t us) {
-//    usleep(us);
-}
+void mp_hal_delay_us(mp_uint_t us);
 
 #ifdef F32C
 static inline mp_uint_t mp_hal_ticks_cpu(void) {

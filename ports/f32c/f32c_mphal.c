@@ -44,19 +44,25 @@ mp_uint_t mp_hal_ticks_us(void) {
 }
 #endif
 
-#ifndef mp_hal_time_ns
 uint64_t mp_hal_time_ns(void) {
     struct timespec tv;
     clock_gettime(CLOCK_MONOTONIC, &tv);
     return (uint64_t)tv.tv_sec * 1000000000ULL + (uint64_t)tv.tv_nsec;
 }
+
+void mp_hal_delay_us(mp_uint_t us) {
+    clock_t t;
+
+#if (CLOCKS_PER_SEC != 1000000)
+#error "CLOCKS_PER_SEC"
 #endif
 
-#ifndef mp_hal_delay_ms
-void mp_hal_delay_ms(mp_uint_t ms) {
-    // XXX fixme
+    for (t = clock() + us; t > clock();) {}
 }
-#endif
+
+void mp_hal_delay_ms(mp_uint_t ms) {
+    mp_hal_delay_us(ms * 1000);
+}
 
 
 /*
