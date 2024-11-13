@@ -8,7 +8,7 @@
 #define MICROPY_FLOAT_IMPL		(MICROPY_FLOAT_IMPL_DOUBLE)
 
 // Enable long-ints by default (LONGLONG or MPZ).
-#define MICROPY_LONGINT_IMPL		(MICROPY_LONGINT_IMPL_LONGLONG)
+#define MICROPY_LONGINT_IMPL		(MICROPY_LONGINT_IMPL_MPZ)
 
 // options to control how MicroPython is built
 #define MICROPY_CONFIG_ROM_LEVEL (MICROPY_CONFIG_ROM_LEVEL_EVERYTHING)
@@ -19,15 +19,12 @@
 // XXX EXTRA_FEATURES level enables this, leading to nlr_jump_fail()?!?
 #define MICROPY_STACK_CHECK		(0)
 
-// Enable the unix-specific "time" module.
+// Enable the platform-specific "time" module.
 #define MICROPY_PY_TIME_TIME_TIME_NS   (1)
 //#define MICROPY_PY_TIME_CUSTOM_SLEEP   (1)
 //#define MICROPY_PY_TIME_GMTIME_LOCALTIME_MKTIME (0)
 #define MICROPY_PY_TIME_INCLUDEFILE    "ports/f32c/modtime.c"
 
-// You can disable the built-in MicroPython compiler by setting the following
-// config option to 0.  If you do this then you won't get a REPL prompt, but you
-// will still be able to execute pre-compiled scripts, compiled with mpy-cross.
 #define MICROPY_ENABLE_COMPILER		(1)
 
 #define MICROPY_ENABLE_GC		(1)
@@ -71,7 +68,7 @@ typedef long mp_off_t;
 #define MICROPY_HW_MCU_NAME "unknown"
 #endif
 
-// MACHINE stuff, not enabled by MICROPY_CONFIG_ROM_LEVEL_EVERYTHING
+// MACHINE stuff, each must be individually enabled
 #define MICROPY_PY_MACHINE (1)
 #define MICROPY_PY_MACHINE_INCLUDEFILE "ports/f32c/modmachine.c"
 
