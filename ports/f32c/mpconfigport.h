@@ -62,7 +62,13 @@ typedef long mp_off_t;
 
 #ifdef F32C
 #define MICROPY_HW_BOARD_NAME "ulx3s"
-#define MICROPY_HW_MCU_NAME "f32c"
+#if defined(__mips)
+#define MICROPY_HW_MCU_NAME "f32c/mips"
+#elif defined(__riscv)
+#define MICROPY_HW_MCU_NAME "riscv"
+#else
+#error "Unsupported architecture!"
+#endif
 #else
 #define MICROPY_HW_BOARD_NAME "unknown"
 #define MICROPY_HW_MCU_NAME "unknown"
