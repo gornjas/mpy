@@ -4,6 +4,9 @@
 
 #include <stdint.h>
 
+// f32c libc has a built-in printf()
+#define MICROPY_USE_INTERNAL_PRINTF (0)
+
 // Enable floating point by default.
 #define MICROPY_FLOAT_IMPL		(MICROPY_FLOAT_IMPL_DOUBLE)
 
