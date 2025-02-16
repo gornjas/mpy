@@ -164,11 +164,13 @@ Configuration
         wait forever. The timeout can also be provided as arg to
         `recv()`/`irecv()`/`recvinto()`.
 
-        *rate*: (ESP32 only, IDF>=4.3.0 only) Set the transmission speed for
+        *rate*: (ESP32 only) Set the transmission speed for
         ESPNow packets. Must be set to a number from the allowed numeric values
         in `enum wifi_phy_rate_t
-        <https://docs.espressif.com/projects/esp-idf/en/v4.4.1/esp32/
-        api-reference/network/esp_wifi.html#_CPPv415wifi_phy_rate_t>`_.
+        <https://docs.espressif.com/projects/esp-idf/en/v5.2.3/esp32/
+        api-reference/network/esp_wifi.html#_CPPv415wifi_phy_rate_t>`_. This
+        parameter is actually *write-only* due to ESP-IDF not providing any
+        means for querying the radio interface's rate parameter.
 
     .. data:: Returns:
 
@@ -441,7 +443,9 @@ must first register the sender and use the same encryption keys as the sender
 
         - *channel*: The wifi channel (2.4GHz) to communicate with this peer.
           Must be an integer from 0 to 14. If channel is set to 0 the current
-          channel of the wifi device will be used. (default=0)
+          channel of the wifi device will be used, if channel is set to another
+          value then this must match the channel currently configured on the
+          interface (see :func:`WLAN.config`). (default=0)
 
         - *ifidx*: (ESP32 only) Index of the wifi interface which will be
           used to send data to this peer. Must be an integer set to
@@ -470,6 +474,9 @@ must first register the sender and use the same encryption keys as the sender
           registered.
         - ``OSError(num, "ESP_ERR_ESPNOW_FULL")`` if too many peers are
           already registered.
+        - ``OSError(num, "ESP_ERR_ESPNOW_CHAN")`` if a channel value was
+          set that doesn't match the channel currently configured for this
+          interface.
         - ``ValueError()`` on invalid keyword args or values.
 
 .. method:: ESPNow.del_peer(mac)
