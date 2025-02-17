@@ -3,6 +3,7 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
 
 // f32c libc has a built-in printf()
 #define MICROPY_USE_INTERNAL_PRINTF (0)
@@ -15,6 +16,9 @@
 
 // options to control how MicroPython is built
 #define MICROPY_CONFIG_ROM_LEVEL (MICROPY_CONFIG_ROM_LEVEL_EVERYTHING)
+
+// Allow loading of .mpy files.
+#define	MICROPY_PERSISTENT_CODE_LOAD	(1)
 
 // XXX EXTRA_FEATURES level enables this, leading to SBSS overflow?!?
 #define MICROPY_PY_MATH_SPECIAL_FUNCTIONS (0)
@@ -57,9 +61,6 @@
 typedef intptr_t mp_int_t; // must be pointer size
 typedef uintptr_t mp_uint_t; // must be pointer size
 typedef long mp_off_t;
-
-// We need to provide a declaration/definition of alloca()
-#include <stdlib.h>
 
 #define MICROPY_HEAP_SIZE		(256 * 1024) // heap size 256 Kbytes
 
