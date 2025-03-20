@@ -26,26 +26,30 @@
 // XXX EXTRA_FEATURES level enables this, leading to nlr_jump_fail()?!?
 #define MICROPY_STACK_CHECK		(0)
 
+// Configure the "os" module.
+#define	MICROPY_PY_OS_INCLUDEFILE	"ports/f32c/modos.c"
+#define	MICROPY_PY_OS_ERRNO		(1)
+
 // Enable the platform-specific "time" module.
-#define MICROPY_PY_TIME_TIME_TIME_NS   (1)
-//#define MICROPY_PY_TIME_CUSTOM_SLEEP   (1)
+#define MICROPY_PY_TIME_TIME_TIME_NS	(1)
+//#define MICROPY_PY_TIME_CUSTOM_SLEEP	(1)
 //#define MICROPY_PY_TIME_GMTIME_LOCALTIME_MKTIME (0)
-#define MICROPY_PY_TIME_INCLUDEFILE    "ports/f32c/modtime.c"
+#define MICROPY_PY_TIME_INCLUDEFILE	"ports/f32c/modtime.c"
 
 #define MICROPY_ENABLE_COMPILER		(1)
 
 #define MICROPY_ENABLE_GC		(1)
 
 // Enable the VFS, and enable the posix "filesystem".
-#define MICROPY_ENABLE_FINALISER    (1)
-#define MICROPY_VFS                 (1)
-#define MICROPY_READER_VFS          (1)
-#define MICROPY_HELPER_LEXER_UNIX   (1)
-#define MICROPY_VFS_POSIX           (1)
-#define MICROPY_READER_POSIX        (1)
+#define MICROPY_ENABLE_FINALISER	(1)
+#define MICROPY_VFS			(1)
+#define MICROPY_READER_VFS		(1)
+#define MICROPY_HELPER_LEXER_UNIX	(1)
+#define MICROPY_VFS_POSIX		(1)
+#define MICROPY_READER_POSIX		(1)
 
 // VFS stat functions should return time values relative to 1970/1/1
-#define MICROPY_EPOCH_IS_1970       (1)
+#define MICROPY_EPOCH_IS_1970		(1)
 
 #define MICROPY_ENABLE_EXTERNAL_IMPORT	(1)
 
