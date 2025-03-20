@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <fatfs/ff.h>
 
@@ -56,11 +57,14 @@ int main(int argc, char **argv) {
     #if MICROPY_VFS_POSIX
     {
 	char buf[FF_MAX_SS];
+
+	/* XXX automount fatfs */
+	getcwd(buf, sizeof(buf));
+
 	// Format the RAM disk
-	int res = f_mkfs("r:", 0, buf, FF_MAX_SS);
+	int res = f_mkfs("r:", 0, buf, FF_MIN_SS);
 	if (res != FR_OK)
 		printf("f_mkfs() returned %d\n", res);
-	f_chdrive("r:");
 
 	// Mount the host FS at the root of our internal VFS
 	mp_obj_t args[2] = {
