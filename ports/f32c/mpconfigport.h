@@ -27,6 +27,7 @@
 #define MICROPY_STACK_CHECK		(0)
 
 // Configure the "os" module.
+#define	MICROPY_PY_OS			(1)
 #define	MICROPY_PY_OS_INCLUDEFILE	"ports/f32c/modos.c"
 #define	MICROPY_PY_OS_ERRNO		(1)
 
@@ -85,6 +86,9 @@ typedef long mp_off_t;
 // MACHINE stuff, each must be individually enabled
 #define MICROPY_PY_MACHINE (1)
 #define MICROPY_PY_MACHINE_INCLUDEFILE "ports/f32c/modmachine.c"
+
+#define	MICROPY_PY_MACHINE_RESET (1)
+#define	MICROPY_PY_MACHINE_BARE_METAL_FUNCS (1)
 
 //#define MICROPY_PY_MACHINE_ADC (1)
 //#define MICROPY_PY_MACHINE_DAC (1)
