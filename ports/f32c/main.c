@@ -86,19 +86,28 @@ soft_reset:
     }
     #endif
 
-    #if MICROPY_ENABLE_COMPILER
-    #if MICROPY_REPL_EVENT_DRIVEN
-    pyexec_event_repl_init();
-    for (;;) {
-        int c = mp_hal_stdin_rx_chr();
-        if (pyexec_event_repl_process_char(c)) {
-            break;
-        }
+    // run boot-up scripts
+    int ret = pyexec_file_if_exists("boot.py");
+    if (ret & PYEXEC_FORCED_EXIT)
+	goto soft_reset_exit;
+
+    if (pyexec_mode_kind == PYEXEC_MODE_FRIENDLY_REPL && ret != 0) {
+	int ret = pyexec_file_if_exists("main.py");
+	if (ret & PYEXEC_FORCED_EXIT)
+	    goto soft_reset_exit;
     }
-    #else
-    pyexec_friendly_repl();
-    #endif
-    #endif
+
+    for (;;) {
+	if (pyexec_mode_kind == PYEXEC_MODE_RAW_REPL) {
+	    if (pyexec_raw_repl() != 0)
+		break;
+	} else {
+	    if (pyexec_friendly_repl() != 0)
+		break;
+	}
+    }
+
+soft_reset_exit:
 
     gc_sweep_all();
 
