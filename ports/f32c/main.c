@@ -48,23 +48,16 @@ static char *heap;
 #endif
 
 int main(int argc, char **argv) {
+    struct termios nterm;
     int stack_dummy;
     stack_top = (char *)&stack_dummy;
 
-#if 0
-    #ifndef F32C
-    system("stty -echo raw");
-    #endif
-#else
-    struct termios nterm;
- 
-    printf("tcgetattr returned %d\n", tcgetattr(0, &nterm));
+    tcgetattr(0, &nterm);
     nterm.c_lflag &= ~(ECHO|ECHOK|ECHONL|ICANON);
     nterm.c_iflag &= ~(IGNCR|INLCR|ICRNL);
     nterm.c_iflag |= ISTRIP;
     nterm.c_oflag &= ~(ONLCR);
-    printf("tcsetattr returned %d\n", tcsetattr(0, TCSADRAIN, &nterm));
-#endif
+    tcsetattr(0, TCSADRAIN, &nterm);
 
     #if MICROPY_VFS_POSIX
     {
