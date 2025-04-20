@@ -71,11 +71,13 @@ endif
 # Flags for optional C++ source code
 CXXFLAGS += $(filter-out -std=c99,$(CFLAGS))
 
-SRC_C += \
-	main.c \
-	uart_core.c \
+SRC_C += main.c
+
+ifeq ($(CROSS), 1)
+SRC_C += uart_core.c \
 	f32c_mphal.c \
 	f32c_vfs_posix.c
+endif
 
 SHARED_SRC_C += $(addprefix shared/,\
 	libc/printf.c \
