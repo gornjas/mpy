@@ -1,9 +1,15 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <termios.h>
 #include <unistd.h>
 
+#include <sys/file.h>
+#include <sys/tty.h>
+
+#ifdef F32C
 #include <fatfs/ff.h>
+#endif
 
 #include "py/builtin.h"
 #include "py/compile.h"
@@ -45,9 +51,20 @@ int main(int argc, char **argv) {
     int stack_dummy;
     stack_top = (char *)&stack_dummy;
 
+#if 0
     #ifndef F32C
     system("stty -echo raw");
     #endif
+#else
+    struct termios nterm;
+ 
+    printf("tcgetattr returned %d\n", tcgetattr(0, &nterm));
+    nterm.c_lflag &= ~(ECHO|ECHOK|ECHONL|ICANON);
+    nterm.c_iflag &= ~(IGNCR|INLCR|ICRNL);
+    nterm.c_iflag |= ISTRIP;
+    nterm.c_oflag &= ~(ONLCR);
+    printf("tcsetattr returned %d\n", tcsetattr(0, TCSADRAIN, &nterm));
+#endif
 
     #if MICROPY_VFS_POSIX
     {

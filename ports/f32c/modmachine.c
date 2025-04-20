@@ -29,7 +29,14 @@ mp_machine_unique_id(void)
 static mp_obj_t
 mp_machine_get_freq(void)
 {
-	return mp_obj_new_int(get_cpu_freq());
+	int f;
+
+#ifdef F32C
+	f = get_cpu_freq();
+#else
+	f = -1;
+#endif
+	return mp_obj_new_int(f);
 }
 
 static void
