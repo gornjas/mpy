@@ -10,6 +10,7 @@
 #include "py/runtime.h"
 #include "py/repl.h"
 #include "py/gc.h"
+#include "py/mphal.h"
 #include "py/mperrno.h"
 #include "shared/readline/readline.h"
 #include "shared/runtime/pyexec.h"
@@ -52,13 +53,11 @@ int main(int argc, char **argv) {
     {
 	char buf[FF_MAX_SS];
 
-	/* XXX automount fatfs */
+	/* XXX automount fatfs: otherwise "C:" won't be visible */
 	getcwd(buf, sizeof(buf));
 
 	// Format the RAM disk
-	int res = f_mkfs("r:", 0, buf, FF_MIN_SS);
-	if (res != FR_OK)
-		printf("f_mkfs() returned %d\n", res);
+	f_mkfs("r:", 0, buf, FF_MIN_SS);
     }
     #endif
 
@@ -71,6 +70,7 @@ soft_reset:
     gc_init(&heap[0], &heap[MICROPY_HEAP_SIZE]);
     #endif
     mp_init();
+    mp_obj_list_append(mp_sys_path, MP_OBJ_NEW_QSTR(MP_QSTR__slash_lib));
     readline_init0();
 
     #if MICROPY_VFS_POSIX
@@ -111,7 +111,7 @@ soft_reset_exit:
 
     gc_sweep_all();
 
-    printf("MPY: soft reboot\n");
+    mp_hal_stdout_tx_str("MPY: soft reboot\r\n");
 
     mp_deinit();
     goto soft_reset;
