@@ -11,6 +11,7 @@
 #include "py/repl.h"
 #include "py/gc.h"
 #include "py/mperrno.h"
+#include "shared/readline/readline.h"
 #include "shared/runtime/pyexec.h"
 
 #include "extmod/vfs.h"
@@ -47,13 +48,6 @@ int main(int argc, char **argv) {
     system("stty -echo raw");
     #endif
 
-    #if MICROPY_ENABLE_GC
-    heap = malloc(MICROPY_HEAP_SIZE);
-    gc_init(&heap[0], &heap[MICROPY_HEAP_SIZE]);
-    #endif
-
-    mp_init();
-
     #if MICROPY_VFS_POSIX
     {
 	char buf[FF_MAX_SS];
@@ -65,10 +59,26 @@ int main(int argc, char **argv) {
 	int res = f_mkfs("r:", 0, buf, FF_MIN_SS);
 	if (res != FR_OK)
 		printf("f_mkfs() returned %d\n", res);
+    }
+    #endif
 
+    #if MICROPY_ENABLE_GC
+    heap = malloc(MICROPY_HEAP_SIZE);
+    #endif
+
+soft_reset:
+    #if MICROPY_ENABLE_GC
+    gc_init(&heap[0], &heap[MICROPY_HEAP_SIZE]);
+    #endif
+    mp_init();
+    readline_init0();
+
+    #if MICROPY_VFS_POSIX
+    {
 	// Mount the host FS at the root of our internal VFS
 	mp_obj_t args[2] = {
-	    MP_OBJ_TYPE_GET_SLOT(&mp_type_vfs_posix, make_new)(&mp_type_vfs_posix, 0, 0, NULL),
+	    MP_OBJ_TYPE_GET_SLOT(
+	      &mp_type_vfs_posix, make_new)(&mp_type_vfs_posix, 0, 0, NULL),
 	    MP_OBJ_NEW_QSTR(MP_QSTR__slash_),
 	};
 	mp_vfs_mount(2, args, (mp_map_t *)&mp_const_empty_map);
@@ -90,8 +100,12 @@ int main(int argc, char **argv) {
     #endif
     #endif
 
+    gc_sweep_all();
+
+    printf("MPY: soft reboot\n");
+
     mp_deinit();
-    return 0;
+    goto soft_reset;
 }
 
 #if MICROPY_ENABLE_GC
