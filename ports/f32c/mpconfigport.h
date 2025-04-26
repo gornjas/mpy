@@ -70,11 +70,11 @@ typedef long mp_off_t;
 #define MICROPY_HEAP_SIZE		(256 * 1024) // heap size 256 Kbytes
 
 #ifdef F32C
-#define MICROPY_HW_BOARD_NAME "ulx3s"
+#define MICROPY_HW_BOARD_NAME "FPGA"
 #if defined(__mips)
 #define MICROPY_HW_MCU_NAME "f32c/mips"
 #elif defined(__riscv)
-#define MICROPY_HW_MCU_NAME "riscv"
+#define MICROPY_HW_MCU_NAME "generic riscv"
 #else
 #error "Unsupported architecture!"
 #endif
