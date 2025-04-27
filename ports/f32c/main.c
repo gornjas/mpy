@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     stack_top = (char *)&stack_dummy;
 
     tcgetattr(0, &nterm);
-    nterm.c_lflag &= ~(ECHO|ECHOK|ECHONL|ICANON);
+    nterm.c_lflag &= ~(ECHO|ECHOK|ECHONL|ICANON|ISIG);
     nterm.c_iflag &= ~(IGNCR|INLCR|ICRNL);
     nterm.c_iflag |= ISTRIP;
     nterm.c_oflag &= ~(ONLCR);
