@@ -9,7 +9,11 @@
 #define MICROPY_USE_INTERNAL_PRINTF (0)
 
 // Enable floating point by default.
+#ifdef __riscv
+#define MICROPY_FLOAT_IMPL		(MICROPY_FLOAT_IMPL_FLOAT)
+#else
 #define MICROPY_FLOAT_IMPL		(MICROPY_FLOAT_IMPL_DOUBLE)
+#endif
 
 // Enable long-ints by default (LONGLONG or MPZ).
 #define MICROPY_LONGINT_IMPL		(MICROPY_LONGINT_IMPL_MPZ)

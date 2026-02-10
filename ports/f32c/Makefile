@@ -33,7 +33,7 @@ ifeq ($(ARCH), mips)
 CFLAGS_F32C = -march=f32c -EL
 endif
 ifeq ($(ARCH), riscv)
-CFLAGS_F32C = -mabi=ilp32 -march=rv32im
+CFLAGS_F32C = -mabi=ilp32 -march=rv32im_zicsr
 endif
 CFLAGS_F32C += -nostdinc -include sys/param.h -DF32C
 CFLAGS += $(INC) -Wall -Werror -std=c99 -nostdlib $(CFLAGS_F32C) $(COPT)
