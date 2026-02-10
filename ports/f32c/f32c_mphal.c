@@ -68,11 +68,6 @@ void mp_hal_delay_ms(mp_uint_t ms) {
 /*
  * XXX FIX THOSE, THEN MOVE TO LIBS:
  */
-int32_t
-__clzdi2(int64_t a) {
-	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
-	exit(1);
-}
 
 /* XXX only riscv needs those: */
 int32_t
