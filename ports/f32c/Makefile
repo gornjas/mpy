@@ -21,6 +21,7 @@ else
 CROSS_COMPILE ?= mips-elf-
 LDFLAGS += --library-path=${F32C_BASE_DIR}/src/lib/mipsel
 endif
+LDFLAGS += --emit-relocs
 endif
 
 INC += -I.
@@ -100,27 +101,14 @@ SRC_QSTR += $(SRC_C) $(SRC_CXX) $(SHARED_SRC_C)
 
 include $(TOP)/py/mkrules.mk
 
+all: $(BUILD)/mpy.bin
 
-all: $(BUILD)/py.bin
-
-$(BUILD)/py.elf: $(OBJ)
+$(BUILD)/mpy: $(OBJ)
 	$(ECHO) "LINK $@"
 	$(Q)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 	$(Q)$(SIZE) $@
 
-$(BUILD)/py.bin: $(BUILD)/py.elf
-	${ISA_CHECK} $(ARCH) $(BUILD)/py.elf
-	$(Q)$(OBJCOPY) -O srec $(OBJFLAGS) $^ $(BUILD)/py.srec
-	$(Q)$(OBJCOPY) -O binary $(OBJFLAGS) $^ $(BUILD)/py.bin
-
-# Run emulation build on a POSIX system with suitable terminal settings
-run:
-	@saved_=`stty -g`; \
-	  stty raw opost -echo; \
-	  $(BUILD)/firmware.elf; \
-	  echo "Exit status: $$?"; \
-	  stty $$saved_
-
-test: $(BUILD)/firmware.elf
-	$(Q)/bin/echo -e "print('hello world!', list(x+1 for x in range(10)), end='eol\\\\n')\\r\\n\\x04" | $(BUILD)/firmware.elf | tail -n2 | grep "^hello world! \\[1, 2, 3, 4, 5, 6, 7, 8, 9, 10\\]eol"
-
+$(BUILD)/mpy.bin: $(BUILD)/mpy
+	${ISA_CHECK} $(ARCH) $(BUILD)/mpy
+	$(Q)$(OBJCOPY) -O srec $(OBJFLAGS) $^ $(BUILD)/mpy.srec
+	$(Q)$(OBJCOPY) -O binary $(OBJFLAGS) $^ $(BUILD)/mpy.bin
