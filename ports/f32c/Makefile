@@ -75,7 +75,7 @@ CXXFLAGS += $(filter-out -std=c99,$(CFLAGS))
 SRC_C += main.c
 
 ifeq ($(CROSS), 1)
-SRC_C += uart_core.c \
+SRC_C += telnet.c ptcp.c \
 	f32c_mphal.c \
 	f32c_vfs_posix.c
 endif
