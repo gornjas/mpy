@@ -41,6 +41,10 @@
 #include "modnetwork.h"
 
 #include "esp_wifi.h"
+
+#if MICROPY_PY_NETWORK_WLAN_CSI
+#include "network_wlan_csi.h"
+#endif
 #include "esp_log.h"
 #include "esp_psram.h"
 #if !CONFIG_ESP_HOSTED_ENABLED
@@ -76,8 +80,8 @@ static bool wifi_sta_connected = false;
 static uint8_t wifi_sta_disconn_reason = 0;
 
 #if MICROPY_HW_ENABLE_MDNS_QUERIES || MICROPY_HW_ENABLE_MDNS_RESPONDER
-// Whether mDNS has been initialised or not
-static bool mdns_initialised = false;
+// Whether mDNS has been initialised or not (shared with network_lan.c)
+bool mdns_initialised = false;
 #endif
 
 static uint8_t conf_wifi_sta_reconnects = 0;
@@ -610,6 +614,10 @@ static mp_obj_t network_wlan_config(size_t n_args, const mp_obj_t *args, mp_map_
                         }
                         break;
                     }
+                    case MP_QSTR_bandwidth: {
+                        esp_exceptions(esp_wifi_set_bandwidth(self->if_id, mp_obj_get_int(kwargs->table[i].value)));
+                        break;
+                    }
                     case MP_QSTR_hostname:
                     case MP_QSTR_dhcp_hostname: {
                         // TODO: Deprecated. Use network.hostname(name) instead.
@@ -708,6 +716,12 @@ static mp_obj_t network_wlan_config(size_t n_args, const mp_obj_t *args, mp_map_
             val = MP_OBJ_NEW_SMALL_INT(channel);
             break;
         }
+        case MP_QSTR_bandwidth: {
+            wifi_bandwidth_t bandwidth;
+            esp_exceptions(esp_wifi_get_bandwidth(self->if_id, &bandwidth));
+            val = MP_OBJ_NEW_SMALL_INT(bandwidth);
+            break;
+        }
         case MP_QSTR_ifname: {
             val = esp_ifname(self->netif);
             break;
@@ -773,6 +787,14 @@ static const mp_rom_map_elem_t wlan_if_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_ifconfig), MP_ROM_PTR(&esp_network_ifconfig_obj) },
     { MP_ROM_QSTR(MP_QSTR_ipconfig), MP_ROM_PTR(&esp_nic_ipconfig_obj) },
 
+    #if MICROPY_PY_NETWORK_WLAN_CSI
+    { MP_ROM_QSTR(MP_QSTR_csi_enable), MP_ROM_PTR(&network_wlan_csi_enable_obj) },
+    { MP_ROM_QSTR(MP_QSTR_csi_disable), MP_ROM_PTR(&network_wlan_csi_disable_obj) },
+    { MP_ROM_QSTR(MP_QSTR_csi_read), MP_ROM_PTR(&network_wlan_csi_read_obj) },
+    { MP_ROM_QSTR(MP_QSTR_csi_dropped), MP_ROM_PTR(&network_wlan_csi_dropped_obj) },
+    { MP_ROM_QSTR(MP_QSTR_csi_available), MP_ROM_PTR(&network_wlan_csi_available_obj) },
+    #endif
+
     // Constants
     { MP_ROM_QSTR(MP_QSTR_IF_STA), MP_ROM_INT(WIFI_IF_STA)},
     { MP_ROM_QSTR(MP_QSTR_IF_AP), MP_ROM_INT(WIFI_IF_AP)},
@@ -795,7 +817,7 @@ static const mp_rom_map_elem_t wlan_if_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SEC_WPA3_ENT), MP_ROM_INT(WIFI_AUTH_WPA3_ENTERPRISE) },
     { MP_ROM_QSTR(MP_QSTR_SEC_WPA2_WPA3_ENT), MP_ROM_INT(WIFI_AUTH_WPA2_WPA3_ENTERPRISE) },
     #endif
-    #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 5, 0)
+    #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 4, 3)
     { MP_ROM_QSTR(MP_QSTR_SEC_WPA_ENT), MP_ROM_INT(WIFI_AUTH_WPA_ENTERPRISE) },
     #endif
 
@@ -807,10 +829,16 @@ static const mp_rom_map_elem_t wlan_if_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_PM_NONE), MP_ROM_INT(WIFI_PS_NONE) },
     { MP_ROM_QSTR(MP_QSTR_PM_PERFORMANCE), MP_ROM_INT(WIFI_PS_MIN_MODEM) },
     { MP_ROM_QSTR(MP_QSTR_PM_POWERSAVE), MP_ROM_INT(WIFI_PS_MAX_MODEM) },
+
+    { MP_ROM_QSTR(MP_QSTR_BANDWIDTH_20), MP_ROM_INT(WIFI_BW20) },
+    { MP_ROM_QSTR(MP_QSTR_BANDWIDTH_40), MP_ROM_INT(WIFI_BW40) },
+    { MP_ROM_QSTR(MP_QSTR_BANDWIDTH_80), MP_ROM_INT(WIFI_BW80) },
+    { MP_ROM_QSTR(MP_QSTR_BANDWIDTH_160), MP_ROM_INT(WIFI_BW160) },
+    { MP_ROM_QSTR(MP_QSTR_BANDWIDTH_80_80), MP_ROM_INT(WIFI_BW80_BW80) },
 };
 static MP_DEFINE_CONST_DICT(wlan_if_locals_dict, wlan_if_locals_dict_table);
 
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 5, 0)
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 4, 3)
 _Static_assert(WIFI_AUTH_MAX == 17, "Synchronize WIFI_AUTH_XXX constants with the ESP-IDF. Look at esp-idf/components/esp_wifi/include/esp_wifi_types_generic.h");
 #elif ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 4, 0)
 _Static_assert(WIFI_AUTH_MAX == 16, "Synchronize WIFI_AUTH_XXX constants with the ESP-IDF. Look at esp-idf/components/esp_wifi/include/esp_wifi_types_generic.h");

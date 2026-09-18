@@ -209,40 +209,40 @@ The following methods are not part of the core Pin API and only implemented on c
 
    Set pin to "0" output level.
 
-   Availability: mimxrt, nrf, renesas-ra, rp2, samd, stm32 ports.
+   Availability: mimxrt, nrf, psoc-edge, renesas-ra, rp2, samd, stm32 ports.
 
 .. method:: Pin.high()
 
    Set pin to "1" output level.
 
-   Availability: mimxrt, nrf, renesas-ra, rp2, samd, stm32 ports.
+   Availability: mimxrt, nrf, psoc-edge, renesas-ra, rp2, samd, stm32 ports.
 
 .. method:: Pin.mode([mode])
 
    Get or set the pin mode.
    See the constructor documentation for details of the ``mode`` argument.
 
-   Availability: cc3200, stm32 ports.
+   Availability: cc3200, psoc-edge, stm32 ports.
 
 .. method:: Pin.pull([pull])
 
    Get or set the pin pull state.
    See the constructor documentation for details of the ``pull`` argument.
 
-   Availability: cc3200, stm32 ports.
+   Availability: cc3200, psoc-edge, stm32 ports.
 
 .. method:: Pin.drive([drive])
 
    Get or set the pin drive strength.
    See the constructor documentation for details of the ``drive`` argument.
 
-   Availability: cc3200 port.
+   Availability: cc3200, psoc-edge ports.
 
 .. method:: Pin.toggle()
 
    Toggle output pin from "0" to "1" or vice-versa.
 
-   Availability: cc3200, esp32, esp8266, mimxrt, rp2, samd ports.
+   Availability: cc3200, esp32, esp8266, mimxrt, psoc-edge, rp2, samd ports.
 
 Attributes
 ----------
@@ -301,10 +301,21 @@ not all constants are available on all ports.
 
 .. data:: Pin.PULL_UP
           Pin.PULL_DOWN
-          Pin.PULL_HOLD
 
    Selects whether there is a pull up/down resistor.  Use the value
    ``None`` for no pull.
+
+   Some ports have a different constants set that can be used to select
+   hardware-specific behaviour:
+
+   - The esp8266 port does not have pull-down resistors on GPIO pins, hence
+     ``Pin.PULL_DOWN`` is not supported.
+   - The mimxrt port has several extra constants to enable different pull
+     modes: ``Pin.PULL_UP_22K`` enables a 22KΩ pull-up on the pin,
+     ``Pin.PULL_UP_47K`` enables a 47KΩ pull-up on the pin, and
+     ``Pin.PULL_HOLD`` that puts the pin into high-impedance mode.  The
+     ``Pin.PULL_UP`` and ``Pin.PULL_DOWN`` constants will use a 100KΩ internal
+     resistor.
 
 .. data:: Pin.DRIVE_0
           Pin.DRIVE_1
