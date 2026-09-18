@@ -59,18 +59,6 @@ int main(int argc, char **argv) {
     nterm.c_oflag &= ~(ONLCR);
     tcsetattr(0, TCSADRAIN, &nterm);
 
-    #if MICROPY_VFS_POSIX
-    {
-	char buf[FF_MAX_SS];
-
-	/* XXX automount fatfs: otherwise "C:" won't be visible */
-	getcwd(buf, sizeof(buf));
-
-	// Format the RAM disk
-	f_mkfs("r:", 0, buf, FF_MIN_SS);
-    }
-    #endif
-
     #if MICROPY_ENABLE_GC
     heap = malloc(MICROPY_HEAP_SIZE);
     #endif
