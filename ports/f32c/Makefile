@@ -72,7 +72,7 @@ endif
 # Flags for optional C++ source code
 CXXFLAGS += $(filter-out -std=c99,$(CFLAGS))
 
-SRC_C += main.c
+SRC_C += main.c modsocket.c
 
 ifeq ($(CROSS), 1)
 SRC_C += telnet.c ptcp.c \

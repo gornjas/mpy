@@ -105,3 +105,5 @@ typedef long mp_off_t;
 //#define MICROPY_PY_MACHINE_UART (1)
 
 #define MP_STATE_PORT MP_STATE_VM
+
+#define MICROPY_PY_SOCKET (1)
