@@ -20,6 +20,7 @@
 #include "py/mperrno.h"
 #include "shared/readline/readline.h"
 #include "shared/runtime/pyexec.h"
+#include "shared/runtime/gchelper.h"
 
 #include "extmod/vfs.h"
 #include "extmod/vfs_posix.h"
@@ -41,16 +42,12 @@ void do_str(const char *src, mp_parse_input_kind_t input_kind) {
 }
 #endif
 
-static char *stack_top;
-
 #if MICROPY_ENABLE_GC
 static char *heap;
 #endif
 
 int main(int argc, char **argv) {
     struct termios nterm;
-    int stack_dummy;
-    stack_top = (char *)&stack_dummy;
 
     tcgetattr(0, &nterm);
     nterm.c_lflag &= ~(ECHO|ECHOK|ECHONL|ICANON|ISIG);
@@ -117,11 +114,11 @@ soft_reset_exit:
 
 #if MICROPY_ENABLE_GC
 void gc_collect(void) {
-    // WARNING: This gc_collect implementation doesn't try to get root
-    // pointers from CPU registers, and thus may function incorrectly.
-    void *dummy;
     gc_collect_start();
-    gc_collect_root(&dummy, ((mp_uint_t)stack_top - (mp_uint_t)&dummy) / sizeof(mp_uint_t));
+    gc_helper_collect_regs_and_stack();
+    #if MICROPY_PY_THREAD
+    mp_thread_gc_others();
+    #endif
     gc_collect_end();
     gc_dump_info(&mp_plat_print);
 }

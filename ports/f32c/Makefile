@@ -83,8 +83,10 @@ endif
 SHARED_SRC_C += $(addprefix shared/,\
 	libc/printf.c \
 	readline/readline.c \
+	runtime/gchelper_generic.c \
 	runtime/pyexec.c \
 	runtime/stdout_helpers.c \
+	timeutils/timeutils.c \
 	$(SHARED_SRC_C_EXTRA) \
 	)
 
