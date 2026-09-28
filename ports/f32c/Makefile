@@ -101,12 +101,20 @@ SRC_QSTR += $(SRC_C) $(SRC_CXX) $(SHARED_SRC_C)
 
 include $(TOP)/py/mkrules.mk
 
+FNTAB=$(BUILD)/_fntab
+READELF=$(CROSS_COMPILE)readelf
+
 all: $(BUILD)/mpy.bin
 
 $(BUILD)/mpy: $(OBJ)
 	$(ECHO) "LINK $@"
 	$(Q)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 	$(Q)$(SIZE) $@
+	printf "#include <stddef.h>\n\nextern void *_fdata;\n\nstruct {\n\tconst unsigned int base;\n\tconst char *name;\n} const __fntab[] = {\n" > ${FNTAB}.c
+	${READELF} -s $@ | awk '$$4 == "FUNC" {printf "%s %s\n", $$2, $$8}' | sort | awk '{printf "\t{0x%s, \"%s\"},\n", $$1, $$2 }' >> ${FNTAB}.c
+	${READELF} -S $@ | cut -d. -f2- | awk '$$1 == "text" && $$2 == "PROGBITS" {printf "\t{0x%s + 0x%s, NULL}\n};\n", $$3, $$5 }' >> ${FNTAB}.c
+	${CC} -ffreestanding -c ${CFLAGS} -o ${FNTAB}.o ${FNTAB}.c
+	$(Q)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) ${FNTAB}.o
 
 $(BUILD)/mpy.bin: $(BUILD)/mpy
 	${ISA_CHECK} $(ARCH) $(BUILD)/mpy
