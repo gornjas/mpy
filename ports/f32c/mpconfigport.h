@@ -43,6 +43,8 @@
 #define MICROPY_ENABLE_COMPILER		(1)
 
 #define MICROPY_ENABLE_GC		(1)
+#define	MICROPY_GCREGS_SETJMP		(1)
+#define	MICROPY_PY_GC_COLLECT_RETVAL	(1)
 
 // Enable the VFS, and enable the posix "filesystem".
 #define MICROPY_ENABLE_FINALISER	(1)
