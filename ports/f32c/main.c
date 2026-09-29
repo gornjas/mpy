@@ -46,7 +46,24 @@ void do_str(const char *src, mp_parse_input_kind_t input_kind) {
 static char *heap;
 #endif
 
-int main(int argc, char **argv) {
+MP_NOINLINE int main_(int argc, char **argv);
+
+int
+main(int argc, char **argv) {
+    // Define a reasonable stack limit to detect stack overflow.
+    mp_uint_t stack_size = 32 * 1024;
+
+    // We should capture stack top ASAP after start, and it should be
+    // captured guaranteedly before any other stack variables are allocated.
+    // For this, actual main (renamed main_) should not be inlined into
+    // this function. main_() itself may have other functions inlined (with
+    // their own stack variables), that's why we need this main/main_ split.
+    mp_cstack_init_with_sp_here(stack_size);
+    return main_(argc, argv);
+}
+
+MP_NOINLINE int
+main_(int argc, char **argv) {
     struct termios nterm;
 
     tcgetattr(0, &nterm);
