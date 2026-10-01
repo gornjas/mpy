@@ -132,7 +132,11 @@ soft_reset_exit:
 #if MICROPY_ENABLE_GC
 void gc_collect(void) {
     gc_collect_start();
+#ifdef __mips__
     gc_helper_collect_regs_and_stack();
+#else
+    /* riscv fixme */
+#endif
     #if MICROPY_PY_THREAD
     mp_thread_gc_others();
     #endif
