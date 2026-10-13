@@ -69,13 +69,6 @@ void mp_hal_delay_ms(mp_uint_t ms) {
  * XXX FIX THOSE, THEN MOVE TO LIBS:
  */
 
-/* XXX only riscv needs those: */
-int32_t
-poll(int a) {
-	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
-	exit(1);
-}
-
 int32_t
 __extendhfdf2(int16_t a) {
 	printf("%s() unimplemented, aborting!\n", __FUNCTION__);
