@@ -77,7 +77,7 @@ telnet_init(int fd)
 
 	/* Promote the socket to a controlling TTY, enable termios processing */
 	fcntl(fd, F_SETFL, O_TTY_INIT);
-	fcntl(fd, IOCTL_TERMIOS | TIOCSETA, &tc_termios);
+	ioctl(fd, TIOCSETA, &tc_termios);
 
 	/* Redirect stdin, stdout, stderr to the PTCP socket */
 	stdin->_fd = fd;
