@@ -41,7 +41,7 @@ CFLAGS += $(INC) -Wall -Werror -std=c99 -nostdlib $(CFLAGS_F32C) $(COPT)
 LIBS += -lm -lc
 LDFLAGS += -N -EL
 LDFLAGS += --section-start=.init=0x80000000
-LDFLAGS += --gc-sections -lcrt0
+LDFLAGS += --gc-sections -lcrt0os
 OBJFLAGS = -R .rel.dyn -R .MIPS.abiflags
 DFU = $(TOP)/tools/dfu.py
 PYDFU = $(TOP)/tools/pydfu.py
@@ -75,7 +75,8 @@ CXXFLAGS += $(filter-out -std=c99,$(CFLAGS))
 SRC_C += main.c modsocket.c
 
 ifeq ($(CROSS), 1)
-SRC_C += telnet.c ptcp.c \
+SRC_C += ptcp.c \
+	uart_core.c \
 	f32c_mphal.c \
 	f32c_vfs_posix.c
 endif
